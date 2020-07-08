@@ -19,7 +19,7 @@ class Device: Object {
     var excludeNonDALAccess: Bool = false
     var deviceMaster: Int32 = -1
 
-    lazy var properties: [Int : Property] = [
+    lazy var properties: [Int: Property] = [
         kCMIOObjectPropertyName: Property(name),
         kCMIOObjectPropertyManufacturer: Property(manufacturer),
         kCMIODevicePropertyDeviceUID: Property(deviceUID),
@@ -35,11 +35,13 @@ class Device: Object {
         kCMIODevicePropertyStreams: Property { [unowned self] in self.streamID },
         kCMIODevicePropertyExcludeNonDALAccess: Property(
             getter: { [unowned self] () -> UInt32 in self.excludeNonDALAccess ? 1 : 0 },
-            setter: { [unowned self] (value: UInt32) -> Void in self.excludeNonDALAccess = value != 0  }
+            setter: {
+                [unowned self] (value: UInt32) -> Void in self.excludeNonDALAccess = value != 0
+            }
         ),
         kCMIODevicePropertyDeviceMaster: Property(
             getter: { [unowned self] () -> Int32 in self.deviceMaster },
-            setter: { [unowned self] (value: Int32) -> Void in self.deviceMaster = value  }
-        ),
+            setter: { [unowned self] (value: Int32) -> Void in self.deviceMaster = value }
+        )
     ]
 }

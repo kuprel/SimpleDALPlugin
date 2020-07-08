@@ -13,7 +13,7 @@ extension CVPixelBuffer {
         var pixelBuffer: CVPixelBuffer?
         let options = [
             kCVPixelBufferCGImageCompatibilityKey as String: true,
-            kCVPixelBufferCGBitmapContextCompatibilityKey as String: true,
+            kCVPixelBufferCGBitmapContextCompatibilityKey as String: true
         ] as [String: Any]
 
         let error = CVPixelBufferCreate(
@@ -42,7 +42,7 @@ extension CVPixelBuffer {
         CVPixelBufferLockBaseAddress(self, CVPixelBufferLockFlags(rawValue: 0))
         let data = CVPixelBufferGetBaseAddress(self)
 
-        let colorSpace = CGColorSpaceCreateDeviceRGB();
+        let colorSpace = CGColorSpaceCreateDeviceRGB()
         let bytesPerRow = CVPixelBufferGetBytesPerRow(self)
 
         let context = CGContext(
@@ -50,7 +50,8 @@ extension CVPixelBuffer {
             width: width, height: height, bitsPerComponent: 8,
             bytesPerRow: bytesPerRow,
             space: colorSpace,
-            bitmapInfo: CGImageAlphaInfo.premultipliedFirst.rawValue | CGBitmapInfo.byteOrder32Big.rawValue)
+            bitmapInfo: CGImageAlphaInfo.premultipliedFirst.rawValue |
+                CGBitmapInfo.byteOrder32Big.rawValue)
 
         if let context = context {
             callback(context)

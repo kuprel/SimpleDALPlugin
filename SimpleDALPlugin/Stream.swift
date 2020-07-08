@@ -26,7 +26,8 @@ class Stream: Object {
             codecType: kCVPixelFormatType_32ARGB,
             width: Int32(width), height: Int32(height),
             extensions: nil,
-            formatDescriptionOut: &formatDescription)
+            formatDescriptionOut: &formatDescription
+        )
         guard error == noErr else {
             log("CMVideoFormatDescriptionCreate Error: \(error)")
             return nil
@@ -35,7 +36,7 @@ class Stream: Object {
     }()
 
     private lazy var clock: CFTypeRef? = {
-        var clock: Unmanaged<CFTypeRef>? = nil
+        var clock: Unmanaged<CFTypeRef>?
 
         let error = CMIOStreamClockCreate(
             kCFAllocatorDefault,
@@ -43,7 +44,8 @@ class Stream: Object {
             Unmanaged.passUnretained(self).toOpaque(),
             CMTimeMake(value: 1, timescale: 10),
             100, 10,
-            &clock);
+            &clock
+        )
         guard error == noErr else {
             log("CMIOStreamClockCreate Error: \(error)")
             return nil
@@ -56,7 +58,8 @@ class Stream: Object {
         let error = CMSimpleQueueCreate(
             allocator: kCFAllocatorDefault,
             capacity: 30,
-            queueOut: &queue)
+            queueOut: &queue
+        )
         guard error == noErr else {
             log("CMSimpleQueueCreate Error: \(error)")
             return nil
@@ -74,7 +77,7 @@ class Stream: Object {
         return timer
     }()
 
-    lazy var properties: [Int : Property] = [
+    lazy var properties: [Int: Property] = [
         kCMIOObjectPropertyName: Property(name),
         kCMIOStreamPropertyFormatDescription: Property(formatDescription!),
         kCMIOStreamPropertyFormatDescriptions: Property([formatDescription!] as CFArray),
@@ -82,8 +85,10 @@ class Stream: Object {
         kCMIOStreamPropertyFrameRate: Property(Float64(frameRate)),
         kCMIOStreamPropertyFrameRates: Property(Float64(frameRate)),
         kCMIOStreamPropertyMinimumFrameRate: Property(Float64(frameRate)),
-        kCMIOStreamPropertyFrameRateRanges: Property(AudioValueRange(mMinimum: Float64(frameRate), mMaximum: Float64(frameRate))),
-        kCMIOStreamPropertyClock: Property(CFTypeRefWrapper(ref: clock!)),
+        kCMIOStreamPropertyFrameRateRanges: Property(
+            AudioValueRange(mMinimum: Float64(frameRate), mMaximum: Float64(frameRate))
+        ),
+        kCMIOStreamPropertyClock: Property(CFTypeRefWrapper(ref: clock!))
     ]
 
     func start() {
@@ -94,7 +99,10 @@ class Stream: Object {
         timer.suspend()
     }
 
-    func copyBufferQueue(queueAlteredProc: CMIODeviceStreamQueueAlteredProc?, queueAlteredRefCon: UnsafeMutableRawPointer?) -> CMSimpleQueue? {
+    func copyBufferQueue(
+        queueAlteredProc: CMIODeviceStreamQueueAlteredProc?,
+        queueAlteredRefCon: UnsafeMutableRawPointer?
+    ) -> CMSimpleQueue? {
         self.queueAlteredProc = queueAlteredProc
         self.queueAlteredRefCon = queueAlteredRefCon
         return self.queue
@@ -106,10 +114,10 @@ class Stream: Object {
             let time = Double(mach_absolute_time()) / Double(1000_000_000)
             let pos = CGFloat(time - floor(time))
 
-            context.setFillColor(CGColor(red: 1, green: 1, blue: 1, alpha: 1))
+            context.setFillColor(CGColor(red: 0, green: 0, blue: 0, alpha: 1))
             context.fill(CGRect(x: 0, y: 0, width: width, height: height))
 
-            context.setFillColor(CGColor(red: 1, green: 0, blue: 0, alpha: 1))
+            context.setFillColor(CGColor(red: 0, green: 1, blue: 0, alpha: 1))
 
             context.fill(CGRect(x: pos * CGFloat(width), y: 310, width: 100, height: 100))
         }
@@ -133,8 +141,14 @@ class Stream: Object {
         }
 
         let scale = UInt64(frameRate) * 100
-        let duration = CMTime(value: CMTimeValue(scale / UInt64(frameRate)), timescale: CMTimeScale(scale))
-        let timestamp = CMTime(value: duration.value * CMTimeValue(sequenceNumber), timescale: CMTimeScale(scale))
+        let duration = CMTime(
+            value: CMTimeValue(scale / UInt64(frameRate)),
+            timescale: CMTimeScale(scale)
+        )
+        let timestamp = CMTime(
+            value: duration.value * CMTimeValue(sequenceNumber),
+            timescale: CMTimeScale(scale)
+        )
 
         var timing = CMSampleTimingInfo(
             duration: duration,
@@ -160,7 +174,7 @@ class Stream: Object {
             return
         }
 
-        var sampleBufferUnmanaged: Unmanaged<CMSampleBuffer>? = nil
+        var sampleBufferUnmanaged: Unmanaged<CMSampleBuffer>?
         error = CMIOSampleBufferCreateForImageBuffer(
             kCFAllocatorDefault,
             pixelBuffer,

@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol Object: class {
+protocol Object: AnyObject {
     var objectID: CMIOObjectID { get }
     var properties: [Int: Property] { get }
 }
@@ -32,7 +32,11 @@ extension Object {
         return property.dataSize
     }
 
-    func getPropertyData(address: CMIOObjectPropertyAddress, dataSize: inout UInt32, data: UnsafeMutableRawPointer) {
+    func getPropertyData(
+        address: CMIOObjectPropertyAddress,
+        dataSize: inout UInt32,
+        data: UnsafeMutableRawPointer
+    ) {
         guard let property = properties[Int(address.mSelector)] else {
             return
         }

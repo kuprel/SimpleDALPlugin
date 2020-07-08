@@ -10,6 +10,7 @@ import Foundation
 
 protocol PropertyValue {
     var dataSize: UInt32 { get }
+    
     func toData(data: UnsafeMutableRawPointer)
     static func fromData(data: UnsafeRawPointer) -> Self
 }
@@ -18,6 +19,7 @@ extension String: PropertyValue {
     var dataSize: UInt32 {
         return UInt32(MemoryLayout<CFString>.size)
     }
+    
     func toData(data: UnsafeMutableRawPointer) {
         let cfString = self as CFString
         let unmanagedCFString = Unmanaged<CFString>.passRetained(cfString)
@@ -32,6 +34,7 @@ extension CMFormatDescription: PropertyValue {
     var dataSize: UInt32 {
         return UInt32(MemoryLayout<Self>.size)
     }
+    
     func toData(data: UnsafeMutableRawPointer) {
         let unmanaged = Unmanaged<Self>.passRetained(self as! Self)
         UnsafeMutablePointer<Unmanaged<Self>>(OpaquePointer(data)).pointee = unmanaged
@@ -45,6 +48,7 @@ extension CFArray: PropertyValue {
     var dataSize: UInt32 {
         return UInt32(MemoryLayout<Self>.size)
     }
+    
     func toData(data: UnsafeMutableRawPointer) {
         let unmanaged = Unmanaged<Self>.passRetained(self as! Self)
         UnsafeMutablePointer<Unmanaged<Self>>(OpaquePointer(data)).pointee = unmanaged
@@ -62,6 +66,7 @@ extension CFTypeRefWrapper: PropertyValue {
     var dataSize: UInt32 {
         return UInt32(MemoryLayout<CFTypeRef>.size)
     }
+    
     func toData(data: UnsafeMutableRawPointer) {
         let unmanaged = Unmanaged<CFTypeRef>.passRetained(ref)
         UnsafeMutablePointer<Unmanaged<CFTypeRef>>(OpaquePointer(data)).pointee = unmanaged
@@ -75,6 +80,7 @@ extension UInt32: PropertyValue {
     var dataSize: UInt32 {
         return UInt32(MemoryLayout<UInt32>.size)
     }
+    
     func toData(data: UnsafeMutableRawPointer) {
         UnsafeMutablePointer<UInt32>(OpaquePointer(data)).pointee = self
     }
@@ -87,6 +93,7 @@ extension Int32: PropertyValue {
     var dataSize: UInt32 {
         return UInt32(MemoryLayout<Int32>.size)
     }
+    
     func toData(data: UnsafeMutableRawPointer) {
         UnsafeMutablePointer<Int32>(OpaquePointer(data)).pointee = self
     }
@@ -99,6 +106,7 @@ extension Float64: PropertyValue {
     var dataSize: UInt32 {
         return UInt32(MemoryLayout<Float64>.size)
     }
+    
     func toData(data: UnsafeMutableRawPointer) {
         UnsafeMutablePointer<Float64>(OpaquePointer(data)).pointee = self
     }
@@ -111,6 +119,7 @@ extension AudioValueRange: PropertyValue {
     var dataSize: UInt32 {
         return UInt32(MemoryLayout<AudioValueRange>.size)
     }
+    
     func toData(data: UnsafeMutableRawPointer) {
         UnsafeMutablePointer<AudioValueRange>(OpaquePointer(data)).pointee = self
     }

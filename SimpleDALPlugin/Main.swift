@@ -6,11 +6,14 @@
 //  Copyright © 2020 com.seanchas116. All rights reserved.
 //
 
-import Foundation
 import CoreMediaIO
+import Foundation
 
 @_cdecl("simpleDALPluginMain")
-public func simpleDALPluginMain(allocator: CFAllocator, requestedTypeUUID: CFUUID) -> CMIOHardwarePlugInRef {
+public func simpleDALPluginMain(
+    allocator: CFAllocator,
+    requestedTypeUUID: CFUUID
+) -> CMIOHardwarePlugInRef {
     NSLog("simpleDALPluginMain")
     return pluginRef
 }

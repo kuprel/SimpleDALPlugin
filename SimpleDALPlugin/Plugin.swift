@@ -12,7 +12,5 @@ class Plugin: Object {
     var objectID: CMIOObjectID = 0
     let name = "SimpleDALPlugin"
 
-    lazy var properties: [Int : Property] = [
-        kCMIOObjectPropertyName: Property(name),
-    ]
+    lazy var properties: [Int: Property] = [kCMIOObjectPropertyName: Property(name)]
 }
